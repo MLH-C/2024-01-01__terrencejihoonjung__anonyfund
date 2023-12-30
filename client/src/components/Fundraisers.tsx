@@ -1,6 +1,13 @@
 import InfoCard from "./InfoCard";
+import FundraiserCard from "./FundraiserCard";
 
 function Fundraisers() {
+  function handleCreateModal() {
+    const modal = document.getElementById(
+      "create-modal"
+    ) as HTMLDialogElement | null;
+    if (modal) modal.showModal();
+  }
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="font-main flex w-3/4 border-1 space-x-8">
@@ -27,67 +34,16 @@ function Fundraisers() {
           </span>
 
           <div className="grid grid-cols-2 gap-4 bg-white border border-slate-200 w-full rounded-md h-list p-6 overflow-y-auto">
-            <div className="w-84 h-72 border border-slate-200 rounded-md">
-              <div className="flex flex-col justify-center items-center w-full h-4/5 border border-1">
-                image
-              </div>
-              <div className="flex flex-col justify-center items-center w-full h-1/5">
-                <p className="w-full line-clamp-1 px-2">
-                  TitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitle
-                </p>
-                <p className="w-fit line-clamp-1">$12 / $1000 raised</p>
-              </div>
-            </div>
-            <div className="w-84 h-72 border border-slate-200 rounded-md">
-              <div className="flex flex-col justify-center items-center w-full h-4/5 border border-1">
-                image
-              </div>
-              <div className="flex flex-col justify-center items-center w-full h-1/5">
-                <p className="w-full line-clamp-1 px-2">
-                  TitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitle
-                </p>
-                <p className="w-fit line-clamp-1">$12 / $1000 raised</p>
-              </div>
-            </div>
-            <div className="w-84 h-72 border border-slate-200 rounded-md">
-              <div className="flex flex-col justify-center items-center w-full h-4/5 border border-1">
-                image
-              </div>
-              <div className="flex flex-col justify-center items-center w-full h-1/5">
-                <p className="w-full line-clamp-1 px-2">
-                  TitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitle
-                </p>
-                <p className="w-fit line-clamp-1">$12 / $1000 raised</p>
-              </div>
-            </div>
-            <div className="w-84 h-72 border border-slate-200 rounded-md">
-              <div className="flex flex-col justify-center items-center w-full h-4/5 border border-1">
-                image
-              </div>
-              <div className="flex flex-col justify-center items-center w-full h-1/5">
-                <p className="w-full line-clamp-1 px-2">
-                  TitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitle
-                </p>
-                <p className="w-fit line-clamp-1">$12 / $1000 raised</p>
-              </div>
-            </div>
-            <div className="w-84 h-72 border border-slate-200 rounded-md">
-              <div className="flex flex-col justify-center items-center w-full h-4/5 border border-1">
-                image
-              </div>
-              <div className="flex flex-col justify-center items-center w-full h-1/5">
-                <p className="w-full line-clamp-1 px-2">
-                  TitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitleTitle
-                </p>
-                <p className="w-fit line-clamp-1">$12 / $1000 raised</p>
-              </div>
-            </div>
+            <FundraiserCard />
           </div>
         </div>
 
         <div className="flex flex-col w-2/5 space-y-4 max-w-full">
           <span className="flex justify-end">
-            <button className="bg-secondary text-text px-4 py-3 rounded-md">
+            <button
+              className="bg-secondary text-text px-4 py-3 rounded-md"
+              onClick={() => handleCreateModal()}
+            >
               Create Fundraiser
             </button>
           </span>

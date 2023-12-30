@@ -20,7 +20,7 @@ function App() {
 
   return (
     <div className="bg-background min-h-screen min-w-screen inset-0">
-      <RouterProvider router={router} />{" "}
+      <RouterProvider router={router} />
     </div>
   );
 }

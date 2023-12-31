@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-function CampaignForm() {
+type CampaignFormProps = {
+  setCampaignCreated: (campaignCreated: boolean) => void;
+};
+
+function CampaignForm({ setCampaignCreated }: CampaignFormProps) {
   const storage = getStorage();
 
   const [title, setTitle] = useState("");
@@ -54,7 +58,7 @@ function CampaignForm() {
 
     try {
       const imageUrl = await uploadImage(selectedImageFile);
-      const walletAddress = localStorage.get("wallet");
+      const walletAddress = localStorage.getItem("wallet");
       if (!walletAddress) throw new Error("Wallet is not connected");
 
       // Construct the campaign data
@@ -68,7 +72,7 @@ function CampaignForm() {
       };
 
       // Send the campaign data to your backend server
-      const response = await fetch("http://localhost:3000/campaigns", {
+      const response = await fetch("http://localhost:3000/api/campaigns", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +84,21 @@ function CampaignForm() {
         throw new Error("Network response was not ok");
       }
 
-      // Handle any post-request logic here (e.g., clearing the form, showing success message)
+      // Reset form
+      setTitle("");
+      setDescription("");
+      setGoalAmount("");
+      setCategory("");
+      setSelectedImageFile(null);
+      setError("");
+
+      const modal = document.getElementById(
+        "create-modal"
+      ) as HTMLDialogElement | null;
+      if (modal) modal.close();
+
+      setCampaignCreated(true);
+      setTimeout(() => setCampaignCreated(false), 3000);
     } catch (error) {
       console.error("Error:", error);
       setError("An error occurred while submitting the form");

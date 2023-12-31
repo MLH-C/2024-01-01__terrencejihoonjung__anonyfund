@@ -9,6 +9,4 @@ admin.initializeApp({
   databaseURL: "https://anonyfund-d353f-default-rtdb.firebaseio.com",
 });
 
-const db = admin.database();
-
-export default db;
+export const db = admin.database();

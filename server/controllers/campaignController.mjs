@@ -1,8 +1,16 @@
 import { db } from "../firebase-admin.mjs";
+import admin from "firebase-admin";
 
 export const createCampaign = async (req, res) => {
-  const { title, description, goalAmount, imageUrl, ownerWalletAddress } =
-    req.body;
+  console.log("made it to the backend");
+  const {
+    title,
+    description,
+    goalAmount,
+    category,
+    imageUrl,
+    ownerWalletAddress,
+  } = req.body;
 
   // Add validation and error handling here
 
@@ -12,6 +20,7 @@ export const createCampaign = async (req, res) => {
       title,
       description,
       goalAmount,
+      category,
       imageUrl,
       ownerWalletAddress,
       raisedAmount: 0,

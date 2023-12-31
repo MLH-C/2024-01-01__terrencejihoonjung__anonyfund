@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar.tsx";
 import CampaignForm from "./CampaignForm.tsx";
@@ -13,6 +14,7 @@ function Root({
   connectedAddress,
   setConnectedAddress,
 }: RootProps) {
+  const [campaignCreated, setCampaignCreated] = useState(false);
   return (
     <div className="flex flex-col min-h-screen">
       <NavBar
@@ -40,9 +42,17 @@ function Root({
             </button>
           </form>
           <h3 className="font-bold text-lg">Create Fundraiser</h3>
-          <CampaignForm />
+          <CampaignForm setCampaignCreated={setCampaignCreated} />
         </div>
       </dialog>
+
+      {campaignCreated && (
+        <div className="toast">
+          <div className="alert alert-info bg-secondary">
+            <span>Campaign Successfully Created</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

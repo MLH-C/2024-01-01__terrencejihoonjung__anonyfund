@@ -12,8 +12,6 @@ function NavBar({
   connectedAddress,
   setConnectedAddress,
 }: NavBarProps) {
-  const { sdk } = useSDK(); // You don't need 'account' here since you're receiving 'connectedAddress' from props
-
   const disconnectWallet = async () => {
     if (typeof window != "undefined" && typeof window.ethereum != "undefined") {
       await window.ethereum.request({

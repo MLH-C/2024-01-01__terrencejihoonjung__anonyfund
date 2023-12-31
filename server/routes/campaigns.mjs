@@ -9,11 +9,11 @@ import {
 } from "../controllers/campaignController.mjs";
 const router = express.Router();
 
-router.post("/campaigns", createCampaign);
-router.get("/campaigns", getCampaigns);
-router.get("/campaigns/:id/donations", getDonations);
-router.get("/campaigns/:id", getCampaign);
-router.put("/campaigns/:id", updateCampaign);
-router.delete("/campaigns/:id", deleteCampaign);
+router.post("/", createCampaign);
+router.get("/", getCampaigns);
+router.get("/:id/donations", getDonations);
+router.get("/:id", getCampaign);
+router.put("/:id", updateCampaign);
+router.delete("/:id", deleteCampaign);
 
 export default router;

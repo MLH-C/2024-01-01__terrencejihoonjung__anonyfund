@@ -18,7 +18,7 @@ function Fundraisers() {
               name="categories"
               id="categories"
             >
-              <option value="all">All Categories</option>
+              <option defaultValue="all">All Categories</option>
               <option value="nonprofit">Non-Profit</option>
               <option value="sports">Sports</option>
               <option value="medical">Medical</option>

@@ -1,15 +1,29 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar.tsx";
 
-function Root() {
+type RootProps = {
+  connectWallet: () => void;
+  connectedAddress: string | null;
+  setConnectedAddress: (connectedAddress: string | null) => void;
+};
+
+function Root({
+  connectWallet,
+  connectedAddress,
+  setConnectedAddress,
+}: RootProps) {
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBar />
+      <NavBar
+        connectWallet={connectWallet}
+        connectedAddress={connectedAddress}
+        setConnectedAddress={setConnectedAddress}
+      />
       <Outlet />
 
       <dialog id="wallet-modal" className="modal ">
         <div className="font-main modal-box bg-background">
-          <h3 className="font-bold text-lg">Connect Wallet</h3>
+          <h3 className="font-bold text-lg">Detected Wallets</h3>
           <p className="py-4">Press ESC key or click outside to close</p>
         </div>
         <form method="dialog" className="modal-backdrop">
@@ -62,12 +76,10 @@ function Root() {
                 <span className="label-text">Category</span>
               </div>
               <select className="select select-bordered w-full">
-                <option disabled selected>
-                  Select Category
-                </option>
-                <option>Non-Profit</option>
-                <option>Sports</option>
-                <option>Medical</option>
+                <option defaultValue="">Select Category</option>
+                <option value="nonprofit">Non-Profit</option>
+                <option value="sports">Sports</option>
+                <option value="medical">Medical</option>
               </select>
             </label>
             <label className="form-control w-full">

@@ -1,7 +1,7 @@
 import InfoCard from "./InfoCard";
-import FundraiserCard from "./FundraiserCard";
+import CampaignCard from "./CampaignCard";
 
-function Fundraisers() {
+function Campaigns() {
   function handleCreateModal() {
     const modal = document.getElementById(
       "create-modal"
@@ -34,7 +34,7 @@ function Fundraisers() {
           </span>
 
           <div className="grid grid-cols-2 gap-4 bg-white border border-slate-200 w-full rounded-md h-list p-6 overflow-y-auto">
-            <FundraiserCard />
+            <CampaignCard />
           </div>
         </div>
 
@@ -44,7 +44,7 @@ function Fundraisers() {
               className="bg-secondary text-text px-4 py-3 rounded-md"
               onClick={() => handleCreateModal()}
             >
-              Create Fundraiser
+              Create Campaign
             </button>
           </span>
 
@@ -55,4 +55,4 @@ function Fundraisers() {
   );
 }
 
-export default Fundraisers;
+export default Campaigns;

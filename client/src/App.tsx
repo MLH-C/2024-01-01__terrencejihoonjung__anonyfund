@@ -7,8 +7,22 @@ import {
 } from "react-router-dom";
 import Root from "./components/Root.tsx";
 import Home from "./components/Home.tsx";
-import Fundraisers from "./components/Fundraisers.tsx";
+import Campaigns from "./components/Campaigns.tsx";
 import { useSDK } from "@metamask/sdk-react";
+
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: import.meta.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: import.meta.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: "https://anonyfund-d353f-default-rtdb.firebaseio.com",
+  projectId: "anonyfund-d353f",
+  storageBucket: "anonyfund-d353f.appspot.com",
+  messagingSenderId: "280472646400",
+  appId: "1:280472646400:web:11d2bcd3034c90d9e9f9e5",
+  measurementId: "G-88B2D1YCSV",
+};
+initializeApp(firebaseConfig);
 
 interface MetaMaskError extends Error {
   code?: number;
@@ -54,7 +68,7 @@ function App() {
         }
       >
         <Route index element={<Home />} />
-        <Route path="/fundraisers" element={<Fundraisers />} />
+        <Route path="/campaigns" element={<Campaigns />} />
       </Route>
     )
   );

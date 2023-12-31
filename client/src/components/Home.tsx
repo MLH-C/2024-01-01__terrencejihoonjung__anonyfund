@@ -13,7 +13,7 @@ function Home() {
         </span>
 
         <Link
-          to="/fundraisers"
+          to="/campaigns"
           className="bg-secondary text-text px-4 py-3 rounded-full"
         >
           Get Started

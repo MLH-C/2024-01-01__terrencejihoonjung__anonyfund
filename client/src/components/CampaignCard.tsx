@@ -1,4 +1,4 @@
-function FundraiserCard() {
+function CampaignCard() {
   return (
     <div className="w-84 h-72 border border-slate-200 rounded-md">
       <div className="flex flex-col justify-center items-center w-full h-4/5 border border-1">
@@ -14,4 +14,4 @@ function FundraiserCard() {
   );
 }
 
-export default FundraiserCard;
+export default CampaignCard;

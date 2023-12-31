@@ -36,7 +36,7 @@ function NavBar({
       <nav className="w-3/4 flex justify-between items-center border border-black px-6 py-3 rounded-full font-main">
         <span className="space-x-6">
           <Link to="/">Home</Link>
-          <Link to="/fundraisers">Donate/Fundraise</Link>
+          <Link to="/campaigns">Donate/Fundraise</Link>
         </span>
 
         <span className="flex space-x-4">

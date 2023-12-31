@@ -1,11 +1,23 @@
 import { useState } from "react";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-type CampaignFormProps = {
-  setCampaignCreated: (campaignCreated: boolean) => void;
+type Campaign = {
+  category: string;
+  createdAt: number;
+  description: string;
+  goalAmount: number;
+  imageUrl: string;
+  ownerWalletAddress: string;
+  raisedAmount: number;
+  title: string;
 };
 
-function CampaignForm({ setCampaignCreated }: CampaignFormProps) {
+type CampaignFormProps = {
+  setCampaignCreated: React.Dispatch<React.SetStateAction<boolean>>;
+  setCampaigns: React.Dispatch<React.SetStateAction<Campaign[]>>;
+};
+
+function CampaignForm({ setCampaignCreated, setCampaigns }: CampaignFormProps) {
   const storage = getStorage();
 
   const [title, setTitle] = useState("");
@@ -83,6 +95,10 @@ function CampaignForm({ setCampaignCreated }: CampaignFormProps) {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+
+      const data: Campaign = await response.json();
+      console.log(data);
+      setCampaigns((prevCampaigns) => [...prevCampaigns, data]);
 
       // Reset form
       setTitle("");

@@ -1,13 +1,34 @@
+import { useState, useEffect } from "react";
 import InfoCard from "./InfoCard";
 import CampaignCard from "./CampaignCard";
 
-function Campaigns() {
+type Campaign = {
+  category: string;
+  createdAt: number;
+  description: string;
+  goalAmount: number;
+  imageUrl: string;
+  ownerWalletAddress: string;
+  raisedAmount: number;
+  title: string;
+};
+
+type CampaignsProps = {
+  campaigns: Campaign[];
+};
+
+function Campaigns({ campaigns }: CampaignsProps) {
+  const [currentCampaign, setCurrentCampaign] = useState<Campaign>(
+    {} as Campaign
+  );
+
   function handleCreateModal() {
     const modal = document.getElementById(
       "create-modal"
     ) as HTMLDialogElement | null;
     if (modal) modal.showModal();
   }
+
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="font-main flex w-3/4 border-1 space-x-8">
@@ -34,7 +55,13 @@ function Campaigns() {
           </span>
 
           <div className="grid grid-cols-2 gap-4 bg-white border border-slate-200 w-full rounded-md h-list p-6 overflow-y-auto">
-            <CampaignCard />
+            {campaigns.map((campaign) => (
+              <CampaignCard
+                key={campaign.ownerWalletAddress + campaign.createdAt}
+                campaign={campaign}
+                setCurrentCampaign={setCurrentCampaign}
+              />
+            ))}
           </div>
         </div>
 
@@ -48,7 +75,7 @@ function Campaigns() {
             </button>
           </span>
 
-          <InfoCard />
+          <InfoCard currentCampaign={currentCampaign} />
         </div>
       </div>
     </div>

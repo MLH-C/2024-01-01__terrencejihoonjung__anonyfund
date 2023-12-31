@@ -12,9 +12,19 @@ export const createCampaign = async (req, res) => {
     ownerWalletAddress,
   } = req.body;
 
-  // Add validation and error handling here
+  const newCampaign = {
+    title,
+    description,
+    goalAmount,
+    category,
+    imageUrl,
+    ownerWalletAddress,
+    raisedAmount: 0,
+    createdAt: admin.database.ServerValue.TIMESTAMP,
+  };
 
   const newCampaignRef = db.ref("campaigns").push();
+
   newCampaignRef.set(
     {
       title,
@@ -30,7 +40,11 @@ export const createCampaign = async (req, res) => {
       if (error) {
         res.status(500).send("Error creating campaign");
       } else {
-        res.status(201).send({ campaignId: newCampaignRef.key });
+        const createdCampaign = {
+          ...newCampaign,
+          id: newCampaignRef.key,
+        };
+        res.status(201).json(createdCampaign);
       }
     }
   );

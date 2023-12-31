@@ -28,9 +28,34 @@ interface MetaMaskError extends Error {
   code?: number;
 }
 
+type Campaign = {
+  category: string;
+  createdAt: number;
+  description: string;
+  goalAmount: number;
+  imageUrl: string;
+  ownerWalletAddress: string;
+  raisedAmount: number;
+  title: string;
+};
+
 function App() {
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [connectedAddress, setConnectedAddress] = useState<string | null>(null);
   const { sdk } = useSDK();
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await fetch("http://localhost:3000/api/campaigns");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      setCampaigns(Object.values(data));
+    } catch (error) {
+      console.error("Error fetching campaigns:", error);
+    }
+  };
 
   const connectWallet = async () => {
     if (!sdk) {
@@ -64,11 +89,15 @@ function App() {
             connectWallet={connectWallet}
             connectedAddress={connectedAddress}
             setConnectedAddress={setConnectedAddress}
+            setCampaigns={setCampaigns}
           />
         }
       >
         <Route index element={<Home />} />
-        <Route path="/campaigns" element={<Campaigns />} />
+        <Route
+          path="/campaigns"
+          element={<Campaigns campaigns={campaigns} />}
+        />
       </Route>
     )
   );
@@ -78,6 +107,8 @@ function App() {
     if (storedAddress) {
       setConnectedAddress(storedAddress);
     }
+
+    fetchCampaigns();
   }, []);
 
   return (

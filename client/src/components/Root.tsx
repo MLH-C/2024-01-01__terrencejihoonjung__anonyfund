@@ -3,16 +3,29 @@ import { Outlet } from "react-router-dom";
 import NavBar from "./NavBar.tsx";
 import CampaignForm from "./CampaignForm.tsx";
 
+type Campaign = {
+  category: string;
+  createdAt: number;
+  description: string;
+  goalAmount: number;
+  imageUrl: string;
+  ownerWalletAddress: string;
+  raisedAmount: number;
+  title: string;
+};
+
 type RootProps = {
   connectWallet: () => void;
   connectedAddress: string | null;
-  setConnectedAddress: (connectedAddress: string | null) => void;
+  setConnectedAddress: React.Dispatch<React.SetStateAction<string | null>>;
+  setCampaigns: React.Dispatch<React.SetStateAction<Campaign[]>>;
 };
 
 function Root({
   connectWallet,
   connectedAddress,
   setConnectedAddress,
+  setCampaigns,
 }: RootProps) {
   const [campaignCreated, setCampaignCreated] = useState(false);
   return (
@@ -42,7 +55,10 @@ function Root({
             </button>
           </form>
           <h3 className="font-bold text-lg">Create Fundraiser</h3>
-          <CampaignForm setCampaignCreated={setCampaignCreated} />
+          <CampaignForm
+            setCampaignCreated={setCampaignCreated}
+            setCampaigns={setCampaigns}
+          />
         </div>
       </dialog>
 

@@ -2,7 +2,7 @@ import express from "express"; // Express
 import morgan from "morgan"; // Logger
 import cors from "cors"; // Cross-Origin Resource Sharing
 import cookieParser from "cookie-parser"; // Parse Cookies from Client
-import { db } from "./firebase.mjs";
+import campaigns from "./routes/campaigns.mjs";
 const app = express(); // Initialize Express App
 
 // Middleware
@@ -18,6 +18,8 @@ app.use(
 
 // Routes
 const apiRouter = express.Router();
+app.use("/api", apiRouter);
+apiRouter.use("/campaigns", campaigns);
 
 // Server
 const PORT = process.env.PORT || 3000;

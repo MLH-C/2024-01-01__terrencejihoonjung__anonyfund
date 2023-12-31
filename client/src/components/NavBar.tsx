@@ -1,32 +1,18 @@
 import { Link } from "react-router-dom";
-import { useSDK } from "@metamask/sdk-react";
+import * as fcl from "@onflow/fcl";
+type User = {
+  loggedIn: boolean;
+  addr?: string;
+};
 
 type NavBarProps = {
   connectWallet: () => void;
-  connectedAddress: string | null;
-  setConnectedAddress: (connectedAddress: string | null) => void;
+  user: User;
 };
 
-function NavBar({
-  connectWallet,
-  connectedAddress,
-  setConnectedAddress,
-}: NavBarProps) {
+function NavBar({ connectWallet, user }: NavBarProps) {
   const disconnectWallet = async () => {
-    if (typeof window != "undefined" && typeof window.ethereum != "undefined") {
-      await window.ethereum.request({
-        method: "wallet_revokePermissions",
-        params: [
-          {
-            eth_accounts: {},
-          },
-        ],
-      });
-    }
-
-    // Using the SDK's disconnect method
-    setConnectedAddress(null); // Clear the connected address state
-    localStorage.removeItem("wallet"); // Remove from local storage
+    fcl.unauthenticate(); // Logs the user out
   };
 
   return (
@@ -39,13 +25,13 @@ function NavBar({
 
         <span className="flex space-x-4">
           <button
-            disabled={connectedAddress !== null}
+            disabled={user.loggedIn}
             className={`bg-primary text-text px-3 py-3 rounded-full`}
             onClick={connectWallet}
           >
-            {connectedAddress !== null ? connectedAddress : "Connect Wallet"}
+            {user.loggedIn ? user.addr : "Connect Wallet"}
           </button>
-          {connectedAddress !== null && (
+          {user.loggedIn && (
             <button
               className="bg-accent text-background px-3 py-3 rounded-full max-w-32"
               onClick={disconnectWallet}

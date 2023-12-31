@@ -12,12 +12,22 @@ type Campaign = {
   title: string;
 };
 
+type User = {
+  loggedIn: boolean;
+  addr?: string;
+};
+
 type CampaignFormProps = {
   setCampaignCreated: React.Dispatch<React.SetStateAction<boolean>>;
   setCampaigns: React.Dispatch<React.SetStateAction<Campaign[]>>;
+  user: User;
 };
 
-function CampaignForm({ setCampaignCreated, setCampaigns }: CampaignFormProps) {
+function CampaignForm({
+  setCampaignCreated,
+  setCampaigns,
+  user,
+}: CampaignFormProps) {
   const storage = getStorage();
 
   const [title, setTitle] = useState("");
@@ -70,7 +80,7 @@ function CampaignForm({ setCampaignCreated, setCampaigns }: CampaignFormProps) {
 
     try {
       const imageUrl = await uploadImage(selectedImageFile);
-      const walletAddress = localStorage.getItem("wallet");
+      const walletAddress = user.addr;
       if (!walletAddress) throw new Error("Wallet is not connected");
 
       // Construct the campaign data

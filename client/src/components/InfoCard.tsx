@@ -1,3 +1,6 @@
+import { useState } from "react";
+import * as fcl from "@onflow/fcl";
+
 type Campaign = {
   category: string;
   createdAt: number;
@@ -14,6 +17,59 @@ type InfoCardProps = {
 };
 
 function InfoCard({ currentCampaign }: InfoCardProps) {
+  const [donateAmount, setDonateAmount] = useState("");
+
+  async function handleSubmit() {
+    try {
+      const transactionId = await sendTransaction(parseFloat(donateAmount));
+
+      console.log("Transaction ID:", transactionId);
+      alert("Donation transaction sent!");
+    } catch (error) {
+      console.error("Transaction failed", error);
+      alert("Transaction failed");
+    }
+  }
+
+  const sendTransaction = async (amount: number) => {
+    const transactionId = await fcl.mutate({
+      cadence: `
+        import FungibleToken from 0x9a0766d93b6608b7
+        import FlowToken from 0x7e60df042a9c0868
+  
+        transaction(recipient: Address, amount: UFix64) {
+          let sentVault: @FungibleToken.Vault
+  
+          prepare(signer: AuthAccount) {
+            let vaultRef = signer.borrow<&FlowToken.Vault>(from: /storage/flowTokenVault)
+                ?? panic("Could not borrow reference to the owner's Vault!")
+  
+            self.sentVault <- vaultRef.withdraw(amount: amount)
+          }
+  
+          execute {
+            let recipient = getAccount(recipient)
+            let receiverRef = recipient.getCapability(/public/flowTokenReceiver)
+                .borrow<&{FungibleToken.Receiver}>()
+                ?? panic("Could not borrow receiver reference to the recipient's Vault")
+  
+            receiverRef.deposit(from: <-self.sentVault)
+          }
+        }
+      `,
+      args: (arg: any, t: any) => [
+        arg(currentCampaign.ownerWalletAddress, t.Address),
+        arg(amount, t.UFix64),
+      ],
+      proposer: fcl.authz,
+      payer: fcl.authz,
+      authorizations: [fcl.authz],
+      limit: 100,
+    });
+
+    return transactionId;
+  };
+
   return (
     <div className="p-8 flex flex-col border border-slate-200 shadow-md rounded-md space-y-16">
       {currentCampaign.ownerWalletAddress ? (
@@ -53,8 +109,14 @@ function InfoCard({ currentCampaign }: InfoCardProps) {
                 placeholder="Enter Custom Amount"
                 type="text"
                 id="custom-amount"
+                value={donateAmount}
+                onChange={(e) => setDonateAmount(e.target.value)}
+                required
               />
-              <button className="bg-accent text-background px-4 py-3 rounded-md">
+              <button
+                onClick={handleSubmit}
+                className="bg-accent text-background px-4 py-3 rounded-md"
+              >
                 Donate
               </button>
             </span>

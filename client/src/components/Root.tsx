@@ -14,27 +14,22 @@ type Campaign = {
   title: string;
 };
 
+type User = {
+  loggedIn: boolean;
+  addr?: string;
+};
+
 type RootProps = {
   connectWallet: () => void;
-  connectedAddress: string | null;
-  setConnectedAddress: React.Dispatch<React.SetStateAction<string | null>>;
+  user: User;
   setCampaigns: React.Dispatch<React.SetStateAction<Campaign[]>>;
 };
 
-function Root({
-  connectWallet,
-  connectedAddress,
-  setConnectedAddress,
-  setCampaigns,
-}: RootProps) {
+function Root({ connectWallet, user, setCampaigns }: RootProps) {
   const [campaignCreated, setCampaignCreated] = useState(false);
   return (
     <div className="flex flex-col min-h-screen">
-      <NavBar
-        connectWallet={connectWallet}
-        connectedAddress={connectedAddress}
-        setConnectedAddress={setConnectedAddress}
-      />
+      <NavBar connectWallet={connectWallet} user={user} />
       <Outlet />
 
       <dialog id="wallet-modal" className="modal ">
@@ -56,6 +51,7 @@ function Root({
           </form>
           <h3 className="font-bold text-lg">Create Fundraiser</h3>
           <CampaignForm
+            user={user}
             setCampaignCreated={setCampaignCreated}
             setCampaigns={setCampaigns}
           />

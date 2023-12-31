@@ -8,8 +8,7 @@ import {
 import Root from "./components/Root.tsx";
 import Home from "./components/Home.tsx";
 import Campaigns from "./components/Campaigns.tsx";
-import { useSDK } from "@metamask/sdk-react";
-
+import * as fcl from "@onflow/fcl";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -24,9 +23,11 @@ const firebaseConfig = {
 };
 initializeApp(firebaseConfig);
 
-interface MetaMaskError extends Error {
-  code?: number;
-}
+fcl
+  .config()
+  .put("accessNode.api", "https://access-testnet.onflow.org") // Testnet access node
+  // Add additional configuration as needed
+  .put("discovery.wallet", "https://fcl-discovery.onflow.org/testnet/authn"); // Wallet discovery for testnet
 
 type Campaign = {
   category: string;
@@ -39,10 +40,14 @@ type Campaign = {
   title: string;
 };
 
+type User = {
+  loggedIn: boolean;
+  addr?: string;
+};
+
 function App() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
-  const [connectedAddress, setConnectedAddress] = useState<string | null>(null);
-  const { sdk } = useSDK();
+  const [user, setUser] = useState<User>({ loggedIn: false });
 
   const fetchCampaigns = async () => {
     try {
@@ -58,26 +63,10 @@ function App() {
   };
 
   const connectWallet = async () => {
-    if (!sdk) {
-      console.error("MetaMask SDK is not available");
-      alert("MetaMask SDK is not available");
-      return;
-    }
-
     try {
-      // Using the MetaMask SDK to connect the wallet
-      const newAccount = (await sdk.connect()) as unknown as string[];
-      if (newAccount.length > 0) {
-        setConnectedAddress(newAccount[0]); // Update the state with the connected account
-        localStorage.setItem("wallet", newAccount[0]); // Save to local storage
-      }
+      await fcl.authenticate();
     } catch (error) {
-      console.error("Error connecting to MetaMask", error);
-      const err = error as MetaMaskError;
-      if (err.code === 4001) {
-        // User rejected the request
-        alert("Please connect to MetaMask to use this feature.");
-      }
+      console.error("Error connecting to Flow", error);
     }
   };
 
@@ -87,8 +76,7 @@ function App() {
         element={
           <Root
             connectWallet={connectWallet}
-            connectedAddress={connectedAddress}
-            setConnectedAddress={setConnectedAddress}
+            user={user}
             setCampaigns={setCampaigns}
           />
         }
@@ -96,17 +84,14 @@ function App() {
         <Route index element={<Home />} />
         <Route
           path="/campaigns"
-          element={<Campaigns campaigns={campaigns} />}
+          element={<Campaigns user={user} campaigns={campaigns} />}
         />
       </Route>
     )
   );
 
   useEffect(() => {
-    const storedAddress = localStorage.getItem("wallet");
-    if (storedAddress) {
-      setConnectedAddress(storedAddress);
-    }
+    fcl.currentUser.subscribe(setUser);
 
     fetchCampaigns();
   }, []);

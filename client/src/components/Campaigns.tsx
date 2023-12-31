@@ -15,9 +15,15 @@ type Campaign = {
 
 type CampaignsProps = {
   campaigns: Campaign[];
+  user: User;
 };
 
-function Campaigns({ campaigns }: CampaignsProps) {
+type User = {
+  loggedIn: boolean;
+  addr?: string;
+};
+
+function Campaigns({ campaigns, user }: CampaignsProps) {
   const [currentCampaign, setCurrentCampaign] = useState<Campaign>(
     {} as Campaign
   );
